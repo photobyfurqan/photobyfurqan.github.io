@@ -899,7 +899,10 @@ function handleSend(btn){
     btn.style.background = '#1a3a1a';
     btn.style.color = '#4ade80';
     btn.style.border = '1px solid #2d6a2d';
-  }, 1200);
+  }, 1200);  var GITHUB_OWNER = 'your-github-username';
+  var GITHUB_REPO = 'your-repo-name';
+  var GITHUB_BRANCH = 'main';
+  var GITHUB_FOLDER = 'img';
 }
 
 /* SMOOTH NAV */
@@ -916,8 +919,8 @@ var ADMIN_PASSWORD = 'furqan123'; // Change this to your desired admin password
 var adminLoggedIn = false;
 var githubToken = '';
 
-var GITHUB_OWNER = 'your-github-username'; // replace with your GitHub username or organization
-var GITHUB_REPO = 'your-repo-name'; // replace with the GitHub repo hosting this site
+var GITHUB_OWNER = 'photobyfurqan'; // replace with your GitHub username or organization
+var GITHUB_REPO = 'photobyfurqan@github.io'; // replace with the GitHub repo hosting this site
 var GITHUB_BRANCH = 'main'; // or master
 var GITHUB_FOLDER = 'img';
 
@@ -969,7 +972,23 @@ function getGitHubHeaders(){
   return headers;
 }
 
+function validateGitHubConfig(){
+  if (!GITHUB_OWNER || GITHUB_OWNER === 'your-github-username') {
+    throw new Error('Set GITHUB_OWNER to your GitHub username or organization in the script.');
+  }
+  if (!GITHUB_REPO || GITHUB_REPO === 'your-repo-name') {
+    throw new Error('Set GITHUB_REPO to your GitHub Pages repository name in the script.');
+  }
+  if (!GITHUB_BRANCH) {
+    throw new Error('Set GITHUB_BRANCH to the repository branch name (usually main).');
+  }
+  if (!GITHUB_FOLDER) {
+    throw new Error('Set GITHUB_FOLDER to the repository folder where images are stored (img).');
+  }
+}
+
 function fileForGitHubPath(path){
+  validateGitHubConfig();
   return 'https://api.github.com/repos/' + encodeURIComponent(GITHUB_OWNER) + '/' + encodeURIComponent(GITHUB_REPO) + '/contents/' + path;
 }
 
@@ -1012,7 +1031,8 @@ async function uploadFileToGitHub(path, contentBase64, message){
   });
   if (!res.ok) {
     var err = await res.json().catch(function(){ return {}; });
-    throw new Error(err.message || 'GitHub upload failed');
+    console.error('GitHub upload error', err, res.status);
+    throw new Error(err.message || 'GitHub upload failed (' + res.status + ')');
   }
   return res.json();
 }
@@ -1031,7 +1051,8 @@ async function deleteFileFromGitHub(path, sha){
   });
   if (!res.ok) {
     var err = await res.json().catch(function(){ return {}; });
-    throw new Error(err.message || 'GitHub delete failed');
+    console.error('GitHub delete error', err, res.status);
+    throw new Error(err.message || 'GitHub delete failed (' + res.status + ')');
   }
   return res.json();
 }
@@ -1075,7 +1096,12 @@ async function uploadPhoto(){
       alert('Photo uploaded to repo/img successfully!');
       await loadPhotoList();
     } catch (error) {
-      alert(error.message);
+      console.error('Upload failed', error);
+      if (error.message) {
+        alert(error.message + '\nCheck the browser console for GitHub API details.');
+      } else {
+        alert('Upload failed. Check the browser console for details.');
+      }
     }
   };
 
