@@ -526,13 +526,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 56p
   </div>
   <div class="work-grid">
     <div class="work-cell reveal" data-cat="event">
-      <img src="img/event.jpeg" class="cell-art">
+      <div class="cell-art art-3"><div class="cell-icon"><svg viewBox="0 0 24 24"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg><span>Add Photo</span></div></div>
+      <!-- <img src="img/event.jpeg" class="cell-art"> -->
       <div class="cell-overlay"><div class="cell-title">ANUGA 2023 — Köln</div><div class="cell-cat">Event Coverage</div></div>
       <div class="cell-num">01</div>
     </div>
     <div class="work-cell reveal d1" data-cat="arch">
-      <!-- <div class="cell-art art-2"><div class="cell-icon"><svg viewBox="0 0 24 24"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg><span>Add Photo</span></div></div> -->
-      <img src="img\Snapchat-1564136893.jpg" class="cell-art">
+      <div class="cell-art art-2"><div class="cell-icon"><svg viewBox="0 0 24 24"><path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z"/></svg><span>Add Photo</span></div></div>
       <div class="cell-overlay"><div class="cell-title">GSG Berlin — Architecture Award</div><div class="cell-cat">Architecture · Award-Winning</div></div>
       <div class="cell-num">02</div>
     </div>
@@ -975,6 +975,10 @@ function validateGitHubConfig(){
   }
   if (!GITHUB_REPO || GITHUB_REPO === 'your-repo-name') {
     throw new Error('Set GITHUB_REPO to your GitHub Pages repository name in the script.');
+  }
+  // catch common mistake where users paste an email-like string containing "@"
+  if (/@/.test(GITHUB_OWNER) || /@/.test(GITHUB_REPO)) {
+    throw new Error('Remove "@" from GITHUB_OWNER or GITHUB_REPO — use plain username and repo name (e.g. username and username.github.io).');
   }
   if (!GITHUB_BRANCH) {
     throw new Error('Set GITHUB_BRANCH to the repository branch name (usually main).');
